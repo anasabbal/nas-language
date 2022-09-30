@@ -1,8 +1,8 @@
-package nas;
+package nas.inter.think.nas;
 
 import java.util.ArrayList;
 import java.util.List;
-import static nas.TokenType.*;
+import static nas.inter.think.nas.TokenType.*;
 
 public class Scanner {
 

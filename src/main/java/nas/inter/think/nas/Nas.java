@@ -1,4 +1,4 @@
-package nas;
+package nas.inter.think.nas;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package nas;
+package nas.inter.think.nas;
 
 public class Token {
 
