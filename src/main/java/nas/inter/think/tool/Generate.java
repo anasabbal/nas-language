@@ -14,7 +14,7 @@ public class Generate {
             System.exit(64);
         }
         String outputDir = args[0];
-        defineAst(outputDir, Arrays.asList(
+        defineAst(outputDir, "Expression", Arrays.asList(
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
@@ -22,7 +22,7 @@ public class Generate {
         ));
     }
     // defineAst needs to do is output the base Expr class
-    private static void defineAst(String outputDir, List<String> types){
+    private static void defineAst(String outputDir, String baseName, List<String> types){
         String path = outputDir + "/" + "Expression" + ".java";
 
         try {
@@ -32,22 +32,39 @@ public class Generate {
             writer.println();
             writer.println("import java.util.List;");
             writer.println();
-            writer.println("abstract class " + "Expression" + " {");
+            writer.println("abstract class " + baseName + " {");
 
+            defineVisitor(writer, baseName, types);
             // The AST classes.
             for(String type: types){
                 String className = type.split(":")[0].trim();
                 String fields = type.split(":")[1].trim();
-                defineType(writer, className, fields);
+                defineType(writer, baseName, className, fields);
             }
+            // The base accept() method
+            writer.println();
+            writer.println("  abstract <R> R accept(Visitor<R> visitor);");
             writer.println("}");
             writer.close();
         }catch (IOException e){
             e.printStackTrace();
         }
     }
+
+    private static void defineVisitor(PrintWriter writer, String baseName, List<String> types) {
+        writer.println("  interface Visitor<R> {");
+
+        for (String type : types) {
+            String typeName = type.split(":")[0].trim();
+            writer.println("    R visit" + typeName + baseName + "(" +
+                    typeName + " " + baseName.toLowerCase() + ");");
+        }
+        writer.println("  }");
+
+    }
+
     // It declares each field in the class body. It defines a constructor for the class with parameters for each field and initializes them in the body
-    private static void defineType(PrintWriter writer, String className, String fields) {
+    private static void defineType(PrintWriter writer, String baseName,  String className, String fields) {
         writer.println("  static class " + className + " extends " +
                 "Expression" + " {");
         // Constructor
@@ -66,5 +83,13 @@ public class Generate {
         }
 
         writer.println("  }");
+
+        // Visitor pattern
+        writer.println();
+        writer.println("    @Override");
+        writer.println("    <R> R accept(Visitor<R> visitor) {");
+        writer.println("      return visitor.visit" +
+                className + baseName + "(this);");
+        writer.println("    }");
     }
 }
