@@ -14,7 +14,7 @@ public class Generate {
             System.exit(64);
         }
         String outputDir = args[0];
-        defineAst(outputDir, "Expression", Arrays.asList(
+        defineAst(outputDir, "Expr", Arrays.asList(
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
@@ -23,7 +23,7 @@ public class Generate {
     }
     // defineAst needs to do is output the base Expr class
     private static void defineAst(String outputDir, String baseName, List<String> types){
-        String path = outputDir + "/" + "Expression" + ".java";
+        String path = outputDir + "/" + "Expr" + ".java";
 
         try {
             PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
@@ -66,7 +66,7 @@ public class Generate {
     // It declares each field in the class body. It defines a constructor for the class with parameters for each field and initializes them in the body
     private static void defineType(PrintWriter writer, String baseName,  String className, String fields) {
         writer.println("  static class " + className + " extends " +
-                "Expression" + " {");
+                "Expr" + " {");
         // Constructor
         writer.println("    " + className + "(" + fields + ") {");
         // Store parameters in fields.

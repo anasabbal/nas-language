@@ -2,7 +2,7 @@ package nas.inter.think.nas;
 
 import java.util.List;
 
-public abstract class Expression {
+public abstract class Expr {
 
     interface Visitor<R> {
         R visitAssignExpr(Assign expr);
@@ -18,7 +18,7 @@ public abstract class Expression {
         R visitUnaryExpr(Unary expr);
         R visitVariableExpr(Variable expr);
     }
-    static class This extends Expression {
+    static class This extends Expr {
         final Token keyword;
         This(Token keyword) {
             this.keyword = keyword;
@@ -28,10 +28,10 @@ public abstract class Expression {
             return visitor.visitThisExpr(this);
         }
     }
-    static class Unary extends Expression {
+    static class Unary extends Expr {
         final Token operator;
-        final Expression right;
-        Unary(Token operator, Expression right) {
+        final Expr right;
+        Unary(Token operator, Expr right) {
             this.operator = operator;
             this.right = right;
         }
@@ -40,7 +40,7 @@ public abstract class Expression {
             return visitor.visitUnaryExpr(this);
         }
     }
-    static class Variable extends Expression {
+    static class Variable extends Expr {
         final Token name;
         Variable(Token name) {
             this.name = name;
@@ -50,7 +50,7 @@ public abstract class Expression {
             return visitor.visitVariableExpr(this);
         }
     }
-    static class Super extends Expression{
+    static class Super extends Expr {
         final Token keyword;
         final Token method;
 
@@ -64,12 +64,12 @@ public abstract class Expression {
             return visitor.visitSuperExpr(this);
         }
     }
-    static class Set extends Expression{
-        final Expression object;
+    static class Set extends Expr {
+        final Expr object;
         final Token name;
-        final Expression value;
+        final Expr value;
 
-        public Set(Expression object, Token name, Expression value) {
+        public Set(Expr object, Token name, Expr value) {
             this.object = object;
             this.name = name;
             this.value = value;
@@ -80,12 +80,12 @@ public abstract class Expression {
             return visitor.visitSetExpr(this);
         }
     }
-    static class Logical extends Expression{
-        final Expression left;
+    static class Logical extends Expr {
+        final Expr left;
         final Token operator;
-        final Expression right;
+        final Expr right;
 
-        public Logical(Expression left, Token operator, Expression right) {
+        public Logical(Expr left, Token operator, Expr right) {
             this.left = left;
             this.operator = operator;
             this.right = right;
@@ -96,7 +96,7 @@ public abstract class Expression {
             return visitor.visitLogicalExpr(this);
         }
     }
-    static class Literal extends Expression{
+    static class Literal extends Expr {
         final Object value;
 
         public Literal(Object value) {
@@ -108,11 +108,11 @@ public abstract class Expression {
             return visitor.visitLiteralExpr(this);
         }
     }
-    static class Grouping extends Expression{
-        final Expression expression;
+    static class Grouping extends Expr {
+        final Expr expr;
 
-        public Grouping(Expression expression) {
-            this.expression = expression;
+        public Grouping(Expr expr) {
+            this.expr = expr;
         }
 
         @Override
@@ -120,11 +120,11 @@ public abstract class Expression {
             return visitor.visitGroupingExpr(this);
         }
     }
-    static class Get extends Expression{
-        final Expression object;
+    static class Get extends Expr {
+        final Expr object;
         final Token name;
 
-        public Get(Expression object, Token name) {
+        public Get(Expr object, Token name) {
             this.object = object;
             this.name = name;
         }
@@ -134,13 +134,13 @@ public abstract class Expression {
             return visitor.visitGetExpr(this);
         }
     }
-    static class Call extends Expression{
-        final Expression expression;
+    static class Call extends Expr {
+        final Expr expr;
         final Token paren;
-        final List<Expression> arguments;
+        final List<Expr> arguments;
 
-        public Call(Expression expression, Token paren, List<Expression> arguments) {
-            this.expression = expression;
+        public Call(Expr expr, Token paren, List<Expr> arguments) {
+            this.expr = expr;
             this.paren = paren;
             this.arguments = arguments;
         }
@@ -150,10 +150,10 @@ public abstract class Expression {
             return visitor.visitCallExpr(this);
         }
     }
-    static class Assign extends Expression{
+    static class Assign extends Expr {
         final Token name;
-        final Expression value;
-        Assign(Token name, Expression value){
+        final Expr value;
+        Assign(Token name, Expr value){
             this.name = name;
             this.value = value;
         }
@@ -164,13 +164,13 @@ public abstract class Expression {
         }
     }
 
-    static class Binary extends Expression{
+    static class Binary extends Expr {
 
-        final Expression left;
-        final Expression right;
+        final Expr left;
+        final Expr right;
         final Token operator;
 
-        public Binary(Expression left, Expression right, Token operator) {
+        public Binary(Expr left, Expr right, Token operator) {
             this.left = left;
             this.right = right;
             this.operator = operator;
